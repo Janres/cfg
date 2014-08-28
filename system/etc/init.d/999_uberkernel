@@ -529,14 +529,14 @@ if [ $ENABLED -eq 1 ]; then
 # ===================================================================================
 
 	# 8.1 SOUND ENGINE
-	if [ [ $SOUND_ENGINE == "franco" ] && [ -d $FRANCO_PATH ] ]; then
+	if [ -d $FRANCO_PATH ]; then
 		echo $FRANCO_CALL > /sys/devices/virtual/misc/soundcontrol/headset_boost
 		echo $FRANCO_MIC > /sys/devices/virtual/misc/soundcontrol/mic_boost
 		echo $FRANCO_SPEAKER > /sys/devices/virtual/misc/soundcontrol/speaker_boost
 		echo $FRANCO_VOLUME > /sys/devices/virtual/misc/soundcontrol/volume_boost
 		echo "Sound Engine: Franco Sound" | tee -a $UBER_LOGFILE
 
-	elif [ [ $SOUND_ENGINE == "faux" ] && [ -d $FAUX_PATH ] ]; then
+	elif [ -d $FAUX_PATH ]; then
 		echo "$FAUX_CAM" > /sys/kernel/sound_control_3/gpl_cam_mic_gain
 		echo "$FAUX_HEAD $FAUX_HEAD" > /sys/kernel/sound_control_3/gpl_headphone_gain
 		echo "$FAUX_POW $FAUX_POW" > /sys/kernel/sound_control_3/gpl_headphone_pa_gain
@@ -709,7 +709,7 @@ if [ $ENABLED -eq 1 ]; then
 		echo 1 > /sys/kernel/power_suspend/power_suspend_state
 	elif [ $POWER_SUSPEND -eq 2 ]; then
 		echo "Power Suspend Mode: LCD_PANEL" | tee -a $UBER_LOGFILE
-	else [ $POWER_SUSPEND -eq 3 ]; then
+	elif [ $POWER_SUSPEND -eq 3 ]; then
 		echo "Power Suspend Mode: HYBRID" | tee -a $UBER_LOGFILE
 	fi
 	
