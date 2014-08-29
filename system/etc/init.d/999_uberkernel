@@ -650,22 +650,42 @@ if [ $ENABLED -eq 1 ]; then
 		
 		# 10.2 DOUBLE TAP TO WAKE
 		echo $DT2W > /sys/android_touch/doubletap2wake
-		echo "DT2W: $DT2W" | tee -a $UBER_LOGFILE
+
+		if [ $DT2W -eq 1 ]; then
+        	echo "DT2W: Bottom screen enabled" | tee -a $UBER_LOGFILE
+        elif [ $DT2W -eq 2 ]; then
+        	echo "DT2W: Full enabled" | tee -a $UBER_LOGFILE
+        else
+        	echo "DT2W: Disabled" | tee -a $UBER_LOGFILE
+        fi
 
 		# 10.3 SWEEP TO WAKE/SLEEP
-		echo $S2W > /sys/android_touch/sweep2wake
-		echo $S2S > /sys/android_touch/s2w_s2sonly
+        if [ $S2WS -eq 1 ]; then
+        	echo 1 > /sys/android_touch/sweep2wake
+			echo 0 > /sys/android_touch/s2w_s2sonly
+        	echo "S2W/S: Enabled" | tee -a $UBER_LOGFILE
+        elif [ $S2WS -eq 2 ]; then
+        	echo 1 > /sys/android_touch/sweep2wake
+			echo 1 > /sys/android_touch/s2w_s2sonly
+        	echo "S2S only: Enabled" | tee -a $UBER_LOGFILE
+        else
+        	echo 0 > /sys/android_touch/sweep2wake
+			echo 0 > /sys/android_touch/s2w_s2sonly
+        	echo "S2W/S: Disabled" | tee -a $UBER_LOGFILE
+        fi
 
-		echo "S2W: $S2W" | tee -a $UBER_LOGFILE
-		echo "S2S: $S2S" | tee -a $UBER_LOGFILE
-
-		# 10.5 POWER KEY SUSPEND
+		# 10.4 POWER KEY SUSPEND
 		echo $PWRKEY > /sys/module/qpnp_power_on/parameters/pwrkey_suspend
-		echo "Powerkey Suspend: $PWRKEY" | tee -a $UBER_LOGFILE
+		
+		if [ $PWRKEY -eq 1 ]; then
+        	echo "Powerkey Suspend: Enabled" | tee -a $UBER_LOGFILE
+        else
+        	echo "Powerkey Suspend: Disabled" | tee -a $UBER_LOGFILE
+        fi
 
-		# 10.6 WAKE TIMEOUT
+		# 10.5 WAKE TIMEOUT
 		echo $TIMEOUT > /sys/android_touch/wake_timeout
-		echo "S2W/DT2W Timeout: $TIMEOUT" | tee -a $UBER_LOGFILE
+		echo "S2WS/DT2W Timeout: $TIMEOUT second/s" | tee -a $UBER_LOGFILE
 
 		sleep $WAIT_TIMERS
 		sync
